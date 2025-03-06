@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music, Shows, and Concerts Flashcards</title>
+    <style>
+:root {
+    --primary-color: #007AFF;
+    --secondary-color: #005ecb;
+    --background-color: #fafafa;
+    --shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    background-color: var(--background-color);
+    overflow-x: hidden;
+}
+
+/* Hamburger menu styling */
+.hamburger {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #f1f1f1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Vertical menu styling */
+#verticalMenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 250px; /* Fixed width for the menu */
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    left: -250px; /* Hide the menu by default */
+    transition: left 0.3s ease; /* Smooth transition */
+    z-index: 999;
+    padding-top: 60px; /* Add padding to avoid overlap with hamburger menu */
+}
+
+#verticalMenu.active {
+    left: 0; /* Show the menu */
+}
+
+#verticalMenu li a {
+    display: block;
+    color: #000;
+    padding: 12px 16px;
+    text-decoration: none;
+}
+
+#verticalMenu li a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+#verticalMenu li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+/* Main content styling */
+#content {
+    margin-left: 0; /* No margin by default */
+    padding: 20px;
+    transition: margin-left 0.3s ease; /* Smooth transition */
+    padding-top: 60px; /* Add padding to avoid overlap with hamburger menu */
+    text-align: center;
+}
+
+#content.shifted {
+    margin-left: 250px; /* Shift content when menu is open */
+}
+
+/* Image and Dialogue Containers */
+.image-container,
+.dialogue-container {
+    margin-bottom: 30px;
+    width: 45%; /* Each container takes 45% of the width */
+    max-width: 500px; /* Limit maximum width */
+    margin-right: 20px; /* Add spacing between the containers */
+}
+
+/* Ensure the containers are displayed side by side */
+@media (min-width: 768px) {
+    .image-container,
+    .dialogue-container {
+        display: inline-block; /* Display side by side */
+        vertical-align: top; /* Align to the top */
+    }
+}
+
+/* Mobile View */
+@media (max-width: 767px) {
+    .image-container,
+    .dialogue-container {
+        width: 100%; /* Full width on mobile */
+        margin-right: 0; /* Remove spacing */
+        display: block; /* Stack vertically */
+    }
+}
+
+.image-container img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+.dialogue-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 15px;
+    text-align: left;
+}
+
+.dialogue-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.dialogue-button:hover {
+    background-color: var(--secondary-color);
+}
+
+.character {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.flashcard-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.polaroid {
+    position: relative;
+    background: white;
+    padding: 10px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    width: 30%;
+    transition: all 0.3s ease;
+}
+
+.polaroid img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.word {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.audio-button {
+    margin-top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+}
+
+.list-view .polaroid {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.list-view .polaroid img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.list-view .word {
+    font-size: 20px;
+    flex: 1;
+}
+
+.deck-container {
+    display: none;
+    position: relative;
+    width: 300px;
+    height: auto;
+    margin: auto;
+    overflow: hidden;
+    text-align: center;
+    background: white;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border-radius: 10px;
+}
+
+.deck-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.deck-word {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.deck-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.deck-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.view-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.view-buttons button {
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    background: var(--primary-color);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .image-container,
+    .dialogue-container {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .flashcard-container {
+        gap: 0;
+    }
+
+    .polaroid {
+        width: 33.33%;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .polaroid img {
+        border-radius: 0;
+    }
+
+    .word {
+        font-size: 18px;
+    }
+
+    .deck-container {
+        width: 90%;
+        height: auto;
+        padding: 15px;
+    }
+
+    .deck-word {
+        font-size: 20px;
+        margin: 10px 0;
+    }
+
+    .deck-buttons {
+        margin-top: 15px;
+    }
+
+    .deck-button {
+        padding: 8px 15px;
+    }
+}
+
+/* Translation Tooltip Styling */
+.translatable {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.translatable:hover {
+    background-color: yellow;
+}
+
+.translatable::after {
+    content: attr(data-translation);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.translatable.active::after {
+    opacity: 1;
+}    </style>
+</head>
+<body>
+    <!-- Hamburger Menu -->
+    <div class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">☰</div>
+
+    <!-- Vertical Menu -------------------------------------------------------------------------------------------------->
+    <ul id="verticalMenu">
+        <li><a class="active" href="https://raphaelangelim.github.io/musique/">Music</a></li>
+        <li><a href="https://raphaelangelim.github.io/deck/">Voyage</a></li>
+    </ul>
+ <!-- Vertical Menu ------------------------------------------------------------------------------------------------------>
+
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Image Section (Concert) -->
+        <div class="image-container">
+            <img src="assets/musique.jpg" alt="Concert Image" />
+        </div>
+
+        <!-- Dialogue Section -->
+        <div class="dialogue-container">
+            <h3>Dialogue</h3>
+            <div id="dialogue-box" class="dialogue"></div>
+            <button class="dialogue-button" onclick="playDialogue()" aria-label="Play dialogue">▶ Écouter</button>
+            <button class="dialogue-button" onclick="pauseDialogue()" aria-label="Pause dialogue">⏸ Pause</button>
+        </div>
+
+        <!-- View Buttons -->
+        <div class="view-buttons">
+            <button onclick="switchView('grid')" aria-label="Switch to grid view">📸 Grid View</button>
+            <button onclick="switchView('list')" aria-label="Switch to list view">📋 List View</button>
+            <button onclick="switchView('deck')" aria-label="Switch to deck view">📖 Deck View</button>
+        </div>
+
+        <!-- Flashcards Section -->
+        <div id="flashcards" class="flashcard-container"></div>
+
+        <!-- Deck View (Instagram Style) -->
+        <div id="deck-container" class="deck-container">
+            <img id="deck-image" src="https://via.placeholder.com/150" alt="Deck Image">
+            <div id="deck-word" class="deck-word"></div>
+            <button class="audio-button" onclick="playDeckAudio()" aria-label="Play audio">🔊</button>
+            <div class="deck-buttons">
+                <button class="deck-button" onclick="prevCard()" aria-label="Previous card">⬅</button>
+                <button class="deck-button" onclick="nextCard()" aria-label="Next card">➡</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+    <script>
+        // Function to toggle the vertical menu
+        function toggleMenu() {
+            const verticalMenu = document.getElementById("verticalMenu");
+            const content = document.getElementById("content");
+
+            verticalMenu.classList.toggle("active");
+            content.classList.toggle("shifted");
+        }
+
+        // Dialogue Section ------------------------------------------------------------------------------------------------
+        const dialogue = [
+        {
+                speaker: "Marie",
+                text: "Salut Luc ! Tu écoutes beaucoup de musique, toi aussi ?",
+                translation: "Hi Luc! Do you listen to a lot of music too?",
+                words: [
+                    { text: "Salut", translation: "Hi" },
+                    { text: "Luc", translation: "Luc" },
+                    { text: "!", translation: "!" },
+                    { text: "Tu", translation: "Do you" },
+                    { text: "écoutes", translation: "listen" },
+                    { text: "beaucoup", translation: "a lot" },
+                    { text: "de", translation: "to" },
+                    { text: "musique", translation: "music" },
+                    { text: ",", translation: "," },
+                    { text: "toi", translation: "you" },
+                    { text: "aussi", translation: "too" },
+                    { text: "?", translation: "?" }
+                ]
+            },
+            {
+                speaker: "Luc",
+                text: "Oui, tout le temps ! Surtout sur mon téléphone ou mon iPad. Et toi ?",
+                translation: "Yes, all the time! Mostly on my phone or iPad. And you?",
+                words: [
+                    { text: "Oui", translation: "Yes" },
+                    { text: ",", translation: "," },
+                    { text: "tout", translation: "all" },
+                    { text: "le", translation: "the" },
+                    { text: "temps", translation: "time" },
+                    { text: "!", translation: "!" },
+                    { text: "Surtout", translation: "Mostly" },
+                    { text: "sur", translation: "on" },
+                    { text: "mon", translation: "my" },
+                    { text: "téléphone", translation: "phone" },
+                    { text: "ou", translation: "or" },
+                    { text: "mon", translation: "my" },
+                    { text: "iPad", translation: "iPad" },
+                    { text: ".", translation: "." },
+                    { text: "Et", translation: "And" },
+                    { text: "toi", translation: "you" },
+                    { text: "?", translation: "?" }
+                ]
+            },
+            {
+                speaker: "Marie",
+                text: "Pareil ! J’utilise Spotify et YouTube. Mais j’ai la version gratuite de Spotify, donc il y a des pubs. C’est super énervant quand je suis en plein milieu d’une chanson !",
+                translation: "Same! I use Spotify and YouTube. But I have the free version of Spotify, so there are ads. It's really annoying when I'm in the middle of a song!",
+                words: [
+                    { text: "Pareil", translation: "Same" },
+                    { text: "!", translation: "!" },
+                    { text: "J’utilise", translation: "I use" },
+                    { text: "Spotify", translation: "Spotify" },
+                    { text: "et", translation: "and" },
+                    { text: "YouTube", translation: "YouTube" },
+                    { text: ".", translation: "." },
+                    { text: "Mais", translation: "But" },
+                    { text: "j’ai", translation: "I have" },
+                    { text: "la", translation: "the" },
+                    { text: "version", translation: "version" },
+                    { text: "gratuite", translation: "free" },
+                    { text: "de", translation: "of" },
+                    { text: "Spotify", translation: "Spotify" },
+                    { text: ",", translation: "," },
+                    { text: "donc", translation: "so" },
+                    { text: "il", translation: "there" },
+                    { text: "y", translation: "are" },
+                    { text: "a", translation: "ads" },
+                    { text: "des", translation: "some" },
+                    { text: "pubs", translation: "ads" },
+                    { text: ".", translation: "." },
+                    { text: "C’est", translation: "It's" },
+                    { text: "super", translation: "really" },
+                    { text: "énervant", translation: "annoying" },
+                    { text: "quand", translation: "when" },
+                    { text: "je", translation: "I" },
+                    { text: "suis", translation: "am" },
+                    { text: "en", translation: "in" },
+                    { text: "plein", translation: "the" },
+                    { text: "milieu", translation: "middle" },
+                    { text: "d’une", translation: "of a" },
+                    { text: "chanson", translation: "song" },
+                    { text: "!", translation: "!" }
+                ]
+            },
+            {
+                speaker: "Luc",
+                text: "Ah oui, les pubs, c’est horrible. Moi, j’ai la version premium. Ça vaut vraiment le coup si tu écoutes beaucoup de musique.",
+                translation: "Ah yes, the ads are horrible. I have the premium version. It's really worth it if you listen to a lot of music.",
+                words: [
+                    { text: "Ah", translation: "Ah" },
+                    { text: "oui", translation: "yes" },
+                    { text: ",", translation: "," },
+                    { text: "les", translation: "the" },
+                    { text: "pubs", translation: "ads" },
+                    { text: ",", translation: "," },
+                    { text: "c’est", translation: "are" },
+                    { text: "horrible", translation: "horrible" },
+                    { text: ".", translation: "." },
+                    { text: "Moi", translation: "I" },
+                    { text: ",", translation: "," },
+                    { text: "j’ai", translation: "have" },
+                    { text: "la", translation: "the" },
+                    { text: "version", translation: "version" },
+                    { text: "premium", translation: "premium" },
+                    { text: ".", translation: "." },
+                    { text: "Ça", translation: "It" },
+                    { text: "vaut", translation: "is" },
+                    { text: "vraiment", translation: "really" },
+                    { text: "le", translation: "worth" },
+                    { text: "coup", translation: "it" },
+                    { text: "si", translation: "if" },
+                    { text: "tu", translation: "you" },
+                    { text: "écoutes", translation: "listen" },
+                    { text: "beaucoup", translation: "a lot" },
+                    { text: "de", translation: "of" },
+                    { text: "musique", translation: "music" },
+                    { text: ".", translation: "." }
+                ]
+            },
+            {
+                speaker: "Marie",
+                text: "Je devrais peut-être passer à la version premium. En tout cas, dès que je trouve une bonne chanson, je partage la playlist avec mon frère.",
+                translation: "Maybe I should switch to the premium version. Anyway, as soon as I find a good song, I share the playlist with my brother.",
+                words: [
+                    { text: "Je", translation: "I" },
+                    { text: "devrais", translation: "should" },
+                    { text: "peut-être", translation: "maybe" },
+                    { text: "passer", translation: "switch" },
+                    { text: "à", translation: "to" },
+                    { text: "la", translation: "the" },
+                    { text: "version", translation: "version" },
+                    { text: "premium", translation: "premium" },
+                    { text: ".", translation: "." },
+                    { text: "En", translation: "In" },
+                    { text: "tout", translation: "any" },
+                    { text: "cas", translation: "case" },
+                    { text: ",", translation: "," },
+                    { text: "dès", translation: "as" },
+                    { text: "que", translation: "soon" },
+                    { text: "je", translation: "I" },
+                    { text: "trouve", translation: "find" },
+                    { text: "une", translation: "a" },
+                    { text: "bonne", translation: "good" },
+                    { text: "chanson", translation: "song" },
+                    { text: ",", translation: "," },
+                    { text: "je", translation: "I" },
+                    { text: "partage", translation: "share" },
+                    { text: "la", translation: "the" },
+                    { text: "playlist", translation: "playlist" },
+                    { text: "avec", translation: "with" },
+                    { text: "mon", translation: "my" },
+                    { text: "frère", translation: "brother" },
+                    { text: ".", translation: "." }
+                ]
+            },
+            {
+                speaker: "Luc",
+                text: "C’est cool ! Tu organises tes playlists par humeur ou par activité ?",
+                translation: "That's cool! Do you organize your playlists by mood or by activity?",
+                words: [
+                    { text: "C’est", translation: "That's" },
+                    { text: "cool", translation: "cool" },
+                    { text: "!", translation: "!" },
+                    { text: "Tu", translation: "Do you" },
+                    { text: "organises", translation: "organize" },
+                    { text: "tes", translation: "your" },
+                    { text: "playlists", translation: "playlists" },
+                    { text: "par", translation: "by" },
+                    { text: "humeur", translation: "mood" },
+                    { text: "ou", translation: "or" },
+                    { text: "par", translation: "by" },
+                    { text: "activité", translation: "activity" },
+                    { text: "?", translation: "?" }
+                ]
+            },
+            {
+                speaker: "Marie",
+                text: "Exactement ! J’ai une playlist pour méditer, une pour le sport, une pour travailler, une pour rester positive, et même une pour faire du vélo.",
+                translation: "Exactly! I have a playlist for meditating, one for working out, one for working, one for staying positive, and even one for biking.",
+                words: [
+                    { text: "Exactement", translation: "Exactly" },
+                    { text: "!", translation: "!" },
+                    { text: "J’ai", translation: "I have" },
+                    { text: "une", translation: "a" },
+                    { text: "playlist", translation: "playlist" },
+                    { text: "pour", translation: "for" },
+                    { text: "méditer", translation: "meditating" },
+                    { text: ",", translation: "," },
+                    { text: "une", translation: "one" },
+                    { text: "pour", translation: "for" },
+                    { text: "le", translation: "the" },
+                    { text: "sport", translation: "workout" },
+                    { text: ",", translation: "," },
+                    { text: "une", translation: "one" },
+                    { text: "pour", translation: "for" },
+                    { text: "travailler", translation: "working" },
+                    { text: ",", translation: "," },
+                    { text: "une", translation: "one" },
+                    { text: "pour", translation: "for" },
+                    { text: "rester", translation: "staying" },
+                    { text: "positive", translation: "positive" },
+                    { text: ",", translation: "," },
+                    { text: "et", translation: "and" },
+                    { text: "même", translation: "even" },
+                    { text: "une", translation: "one" },
+                    { text: "pour", translation: "for" },
+                    { text: "faire", translation: "biking" },
+                    { text: "du", translation: "some" },
+                    { text: "vélo", translation: "biking" },
+                    { text: ".", translation: "." }
+                ]
+            },
+            {
+                speaker: "Luc",
+                text: "Wahou, t’es bien organisée ! Moi, j’ai tout en vrac. Et tu utilises quoi comme écouteurs ?",
+                translation: "Wow, you're really organized! I have everything mixed up. And what do you use for headphones?",
+                words: [
+                    { text: "Wahou", translation: "Wow" },
+                    { text: ",", translation: "," },
+                    { text: "t’es", translation: "you're" },
+                    { text: "bien", translation: "really" },
+                    { text: "organisée", translation: "organized" },
+                    { text: "!", translation: "!" },
+                    { text: "Moi", translation: "I" },
+                    { text: ",", translation: "," },
+                    { text: "j’ai", translation: "have" },
+                    { text: "tout", translation: "everything" },
+                    { text: "en", translation: "mixed" },
+                    { text: "vrac", translation: "up" },
+                    { text: ".", translation: "." },
+                    { text: "Et", translation: "And" },
+                    { text: "tu", translation: "do you" },
+                    { text: "utilises", translation: "use" },
+                    { text: "quoi", translation: "what" },
+                    { text: "comme", translation: "as" },
+                    { text: "écouteurs", translation: "headphones" },
+                    { text: "?", translation: "?" }
+                ]
+            },
+            {
+                speaker: "Marie",
+                text: "J’adore mes AirPods, ils sont sans fil et super pratiques. Mais quand la batterie est vide, je dois utiliser mes écouteurs filaires. Et toi ?",
+                translation: "I love my AirPods, they're wireless and super practical. But when the battery is dead, I have to use my wired headphones. And you?",
+                words: [
+                    { text: "J’adore", translation: "I love" },
+                    { text: "mes", translation: "my" },
+                    { text: "AirPods", translation: "AirPods" },
+                    { text: ",", translation: "," },
+                    { text: "ils", translation: "they" },
+                    { text: "sont", translation: "are" },
+                    { text: "sans", translation: "wireless" },
+                    { text: "fil", translation: "and" },
+                    { text: "et", translation: "and" },
+                    { text: "super", translation: "super" },
+                    { text: "pratiques", translation: "practical" },
+                    { text: ".", translation: "." },
+                    { text: "Mais", translation: "But" },
+                    { text: "quand", translation: "when" },
+                    { text: "la", translation: "the" },
+                    { text: "batterie", translation: "battery" },
+                    { text: "est", translation: "is" },
+                    { text: "vide", translation: "dead" },
+                    { text: ",", translation: "," },
+                    { text: "je", translation: "I" },
+                    { text: "dois", translation: "have to" },
+                    { text: "utiliser", translation: "use" },
+                    { text: "mes", translation: "my" },
+                    { text: "écouteurs", translation: "headphones" },
+                    { text: "filaires", translation: "wired" },
+                    { text: ".", translation: "." },
+                    { text: "Et", translation: "And" },
+                    { text: "toi", translation: "you" },
+                    { text: "?", translation: "?" }
+                ]
+            },
+            {
+                speaker: "Luc",
+                text: "Moi, j’utilise surtout mes écouteurs sans fil dans le bus, mais dans la voiture, j’allume la radio. C’est parfait pour les trajets du matin.",
+                translation: "I mostly use my wireless headphones on the bus, but in the car, I turn on the radio. It's perfect for morning commutes.",
+                words: [
+                    { text: "Moi", translation: "I" },
+                    { text: ",", translation: "," },
+                    { text: "j’utilise", translation: "use" },
+                    { text: "surtout", translation: "mostly" },
+                    { text: "mes", translation: "my" },
+                    { text: "écouteurs", translation: "headphones" },
+                    { text: "sans", translation: "wireless" },
+                    { text: "fil", translation: "and" },
+                    { text: "dans", translation: "on" },
+                    { text: "le", translation: "the" },
+                    { text: "bus", translation: "bus" },
+                    { text: ",", translation: "," },
+                    { text: "mais", translation: "but" },
+                    { text: "dans", translation: "in" },
+                    { text: "la", translation: "the" },
+                    { text: "voiture", translation: "car" },
+                    { text: ",", translation: "," },
+                    { text: "j’allume", translation: "I turn on" },
+                    { text: "la", translation: "the" },
+                    { text: "radio", translation: "radio" },
+                    { text: ".", translation: "." },
+                    { text: "C’est", translation: "It's" },
+                    { text: "parfait", translation: "perfect" },
+                    { text: "pour", translation: "for" },
+                    { text: "les", translation: "the" },
+                    { text: "trajets", translation: "commutes" },
+                    { text: "du", translation: "of the" },
+                    { text: "matin", translation: "morning" },
+                    { text: ".", translation: "." }
+                ]
+            },
+            {
+                speaker: "Marie",
+                text: "La radio, c’est sympa pour découvrir de nouvelles chansons. Moi, j’écoute souvent France Inter en conduisant.",
+                translation: "The radio is nice for discovering new songs. I often listen to France Inter while driving.",
+                words: [
+                    { text: "La", translation: "The" },
+                    { text: "radio", translation: "radio" },
+                    { text: ",", translation: "," },
+                    { text: "c’est", translation: "is" },
+                    { text: "sympa", translation: "nice" },
+                    { text: "pour", translation: "for" },
+                    { text: "découvrir", translation: "discovering" },
+                    { text: "de", translation: "new" },
+                    { text: "nouvelles", translation: "songs" },
+                    { text: "chansons", translation: "songs" },
+                    { text: ".", translation: "." },
+                    { text: "Moi", translation: "I" },
+                    { text: ",", translation: "," },
+                    { text: "j’écoute", translation: "often listen" },
+                    { text: "souvent", translation: "often" },
+                    { text: "France", translation: "France" },
+                    { text: "Inter", translation: "Inter" },
+                    { text: "en", translation: "while" },
+                    { text: "conduisant", translation: "driving" },
+                    { text: ".", translation: "." }
+                ]
+            },
+            {
+                speaker: "Luc",
+                text: "Pareil ! Bon, faut que j’y aille. Envoie-moi ta playlist « positivité » !",
+                translation: "Same! Well, I have to go. Send me your 'positivity' playlist!",
+                words: [
+                    { text: "Pareil", translation: "Same" },
+                    { text: "!", translation: "!" },
+                    { text: "Bon", translation: "Well" },
+                    { text: ",", translation: "," },
+                    { text: "faut", translation: "have to" },
+                    { text: "que", translation: "I" },
+                    { text: "j’y", translation: "go" },
+                    { text: "aille", translation: "go" },
+                    { text: ".", translation: "." },
+                    { text: "Envoie-moi", translation: "Send me" },
+                    { text: "ta", translation: "your" },
+                    { text: "playlist", translation: "playlist" },
+                    { text: "«", translation: "“" },
+                    { text: "positivité", translation: "positivity" },
+                    { text: "»", translation: "”" },
+                    { text: "!", translation: "!" }
+                ]
+            },
+            {
+                speaker: "Marie",
+                text: "Pas de problème ! À plus, Luc !",
+                translation: "No problem! See you later, Luc!",
+                words: [
+                    { text: "Pas", translation: "No" },
+                    { text: "de", translation: "problem" },
+                    { text: "problème", translation: "problem" },
+                    { text: "!", translation: "!" },
+                    { text: "À", translation: "See" },
+                    { text: "plus", translation: "you" },
+                    { text: ",", translation: "," },
+                    { text: "Luc", translation: "Luc" },
+                    { text: "!", translation: "!" }
+                ]
+            }
+        ];
+        // Dialogue Section ------------------------------------------------------------------------------------------------
+
+        let synth = window.speechSynthesis;
+        let i = 0;
+        let isPaused = false;
+
+        // Function to select a French voice
+        function getFrenchVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            const frenchVoice = voices.find(voice => voice.lang === "fr-FR" && voice.name.includes("Google Français")) ||
+                                voices.find(voice => voice.lang === "fr-FR" && voice.name.includes("French")) ||
+                                voices.find(voice => voice.lang === "fr-FR");
+
+            if (frenchVoice) {
+                return frenchVoice;
+            } else {
+                console.warn("No French voice found. Falling back to default voice.");
+                return voices[0];
+            }
+        }
+
+        // Load the dialogue into the dialogue box
+        function loadDialogue() {
+            let dialogueBox = document.getElementById("dialogue-box");
+            dialogueBox.innerHTML = "";
+            dialogue.forEach(line => {
+                let p = document.createElement("p");
+                p.innerHTML = `<span class="character">${line.speaker} :</span> `;
+                line.words.forEach(word => {
+                    p.innerHTML += `<span class="translatable" data-translation="${word.translation}">${word.text}</span> `;
+                });
+                dialogueBox.appendChild(p);
+            });
+        }
+
+        // Play the dialogue
+        function playDialogue() {
+            if (isPaused) {
+                isPaused = false;
+                speakNextLine();
+                return;
+            }
+
+            i = 0;
+            isPaused = false;
+            speakNextLine();
+        }
+
+        // Pause the dialogue
+        function pauseDialogue() {
+            isPaused = true;
+            synth.cancel();
+        }
+
+        // Speak the next line of dialogue
+        function speakNextLine() {
+            if (i < dialogue.length && !isPaused) {
+                let msg = new SpeechSynthesisUtterance(dialogue[i].text);
+                msg.lang = "fr-FR";
+                msg.rate = 0.7;
+                msg.pitch = 1.2;
+
+                const frenchVoice = getFrenchVoice();
+                if (frenchVoice) {
+                    msg.voice = frenchVoice;
+                }
+
+                synth.cancel();
+
+                msg.onend = () => {
+                    if (!isPaused) {
+                        i++;
+                        if (i < dialogue.length) {
+                            setTimeout(speakNextLine, 1000);
+                        }
+                    }
+                };
+
+                synth.speak(msg);
+            }
+        }
+
+        // Flashcards Section ----------------------------------------------------------------------------------------------
+        let currentDeckIndex = 0;
+        const flashcards = [
+        { word: "Écouter de la musique", img: "assets/listen_music.jpg", translation: "To listen to music" },
+        
+            { word: "Version gratuite", img: "assets/free_version.jpg", translation: "Free version" },
+            { word: "Version premium", img: "assets/premium_version.jpg", translation: "Premium version" },
+            { word: "Publicités", img: "assets/ads.jpg", translation: "Ads" },
+            { word: "Chanson", img: "assets/song.jpg", translation: "Song" },
+            { word: "Playlist", img: "assets/playlist.jpg", translation: "Playlist" },
+            { word: "Partager", img: "assets/share.jpg", translation: "To share" },
+            { word: "Méditer", img: "assets/meditate.jpg", translation: "To meditate" },
+            { word: "Faire du sport", img: "assets/workout.jpg", translation: "To work out" },
+            { word: "Travailler", img: "assets/work.jpg", translation: "To work" },
+            { word: "Rester positif", img: "assets/stay_positive.jpg", translation: "To stay positive" },
+            { word: "Faire du vélo", img: "assets/bike.jpg", translation: "To bike" },
+            { word: "Écouteurs sans fil", img: "assets/wireless_headphones.jpg", translation: "Wireless headphones" },
+            { word: "Écouteurs filaires", img: "assets/wired_headphones.jpg", translation: "Wired headphones" },
+            { word: "Batterie", img: "assets/battery.jpg", translation: "Battery" },
+            { word: "Radio", img: "assets/radio.jpg", translation: "Radio" },
+            { word: "Conduire", img: "assets/drive.jpg", translation: "To drive" },
+            { word: "Trajet", img: "assets/commute.jpg", translation: "Commute" },
+            { word: "Découvrir de nouvelles chansons", img: "assets/discover_music.jpg", translation: "To discover new songs" },
+            { word: "France Inter", img: "assets/france_inter.jpg", translation: "France Inter (radio)" },
+            { word: "Organiser", img: "assets/organize.jpg", translation: "To organize" },
+            { word: "Téléphone", img: "assets/phone.jpg", translation: "Phone" },
+            { word: "Tablette", img: "assets/tablet.jpg", translation: "Tablet" },
+            { word: "Spotify", img: "assets/spotify.jpg", translation: "Spotify" },
+            { word: "YouTube", img: "assets/youtube.jpg", translation: "YouTube" },
+            { word: "Pratique", img: "assets/practical.jpg", translation: "Practical" },
+            { word: "Sympa", img: "assets/nice.jpg", translation: "Nice/Cool" },
+            { word: "Concert", img: "assets/concert.jpg", translation: "Concert" },
+            { word: "Festival", img: "assets/festival.jpg", translation: "Festival" },
+            { word: "Groupe", img: "assets/band.jpg", translation: "Band" },
+            { word: "Chanteur/Chanteuse", img: "assets/singer.jpg", translation: "Singer" },
+            { word: "Guitare", img: "assets/guitar.jpg", translation: "Guitar" },
+            { word: "Batterie", img: "assets/drums.jpg", translation: "Drums" },
+            { word: "Scène", img: "assets/stage.jpg", translation: "Stage" },
+            { word: "Public", img: "assets/audience.jpg", translation: "Audience" },
+            { word: "Billet", img: "assets/ticket.jpg", translation: "Ticket" }
+        ];
+        // Flashcards Section ----------------------------------------------------------------------------------------------
+        // Load the flashcards into the flashcard container
+        function loadFlashcards() {
+            let flashcardContainer = document.getElementById("flashcards");
+            flashcardContainer.innerHTML = "";
+            flashcards.forEach(item => {
+                let card = document.createElement("div");
+                card.classList.add("polaroid");
+                card.innerHTML = `
+                    <img src="${item.img}" alt="${item.word}" onerror="this.src='https://via.placeholder.com/150'">
+                    <div class="word translatable" data-translation="${item.translation}">${item.word}</div>
+                    <button class="audio-button" onclick="playAudio('${item.word}')" aria-label="Play audio for ${item.word}">🔊</button>
+                `;
+                flashcardContainer.appendChild(card);
+            });
+        }
+
+        // Play audio for a given word
+        function playAudio(word) {
+            if (typeof responsiveVoice !== "undefined") {
+                responsiveVoice.speak(word, "French Female", { rate: 0.7, pitch: 1.2 });
+            } else {
+                console.error("ResponsiveVoice library not loaded.");
+            }
+        }
+
+        // Add click functionality for translations
+        document.addEventListener('click', (e) => {
+            const translatable = e.target.closest('.translatable');
+            if (translatable) {
+                e.stopPropagation();
+                translatable.classList.toggle('active');
+            } else {
+                document.querySelectorAll('.translatable').forEach(word => {
+                    word.classList.remove('active');
+                });
+            }
+        });
+
+        // Function to switch between grid, list, and deck views
+        function switchView(view) {
+            const flashcardContainer = document.getElementById("flashcards");
+            const deckContainer = document.getElementById("deck-container");
+
+            deckContainer.style.display = "none";
+            flashcardContainer.classList.remove("grid-view", "list-view", "deck-view");
+
+            if (view === "grid") {
+                flashcardContainer.classList.add("grid-view");
+                flashcardContainer.style.display = "flex";
+            } else if (view === "list") {
+                flashcardContainer.classList.add("list-view");
+                flashcardContainer.style.display = "flex";
+            } else if (view === "deck") {
+                flashcardContainer.style.display = "none";
+                deckContainer.style.display = "block";
+                loadDeckView();
+            }
+        }
+
+        // Function to load the deck view
+        function loadDeckView() {
+            const deckImage = document.getElementById("deck-image");
+            const deckWord = document.getElementById("deck-word");
+            const currentCard = flashcards[currentDeckIndex];
+
+            deckImage.src = currentCard.img;
+            deckWord.innerHTML = `<span class="translatable" data-translation="${currentCard.translation}">${currentCard.word}</span>`;
+        }
+
+        // Function to navigate to the previous card in the deck
+        function prevCard() {
+            if (currentDeckIndex > 0) {
+                currentDeckIndex--;
+                loadDeckView();
+            }
+        }
+
+        // Function to navigate to the next card in the deck
+        function nextCard() {
+            if (currentDeckIndex < flashcards.length - 1) {
+                currentDeckIndex++;
+                loadDeckView();
+            }
+        }
+
+        // Function to play audio for the current deck card
+        function playDeckAudio() {
+            const currentCard = flashcards[currentDeckIndex];
+            playAudio(currentCard.word);
+        }
+
+        // Load the dialogue and flashcards when the page loads
+        window.onload = () => {
+            loadDialogue();
+            loadFlashcards();
+            switchView('grid'); // Default to grid view
+        };
+    </script>
+</body>
+</html>
